@@ -10,6 +10,8 @@ pygame.init()
 screen_width = 500
 screen_height = 500
 min_px = 20
+
+# speed config
 snake_speed = 15
 current_speed = snake_speed
 max_speed = 20
