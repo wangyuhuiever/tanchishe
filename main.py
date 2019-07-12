@@ -10,8 +10,9 @@ pygame.init()
 screen_width = 500
 screen_height = 500
 min_px = 20
-snake_speed = 10
-block = snake_speed
+snake_speed = 15
+current_speed = snake_speed
+max_speed = 20
 
 screen = pygame.display.set_mode([screen_width, screen_height])
 pygame.display.set_caption("贪吃蛇")
@@ -68,20 +69,20 @@ while True:
             game_over()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN and snake_direction != 'up':
+            if event.key == pygame.K_DOWN and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
                 snake_direction.append('down')
-            elif event.key == pygame.K_UP and snake_direction != 'down':
+            elif event.key == pygame.K_UP and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
                 snake_direction.append('up')
-            elif event.key == pygame.K_LEFT and snake_direction != 'right':
+            elif event.key == pygame.K_LEFT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
                 snake_direction.append('left')
-            elif event.key == pygame.K_RIGHT and snake_direction != 'left':
+            elif event.key == pygame.K_RIGHT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
                 snake_direction.append('right')
             elif event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(QUIT, {}))
 
     # control snake speed
-    if block:
-        block -= 1
+    if current_speed < max_speed:
+        current_speed += 1
     else:
         # modify position depend snake's direction
         if snake_direction:
@@ -97,7 +98,7 @@ while True:
                 position_x -= min_px
             elif direction == 'right':
                 position_x += min_px
-            block = snake_speed
+            current_speed = snake_speed
 
         # add new position
         position_list.append((position_x, position_y))
