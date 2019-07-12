@@ -33,8 +33,8 @@ def game_over():
 
 # generate position
 def generate_position(exist_position):
-    x_list = list(range(0, screen_width+1, min_px))
-    y_list = list(range(0, screen_height+1, min_px))
+    x_list = list(range(0, screen_width, min_px))
+    y_list = list(range(0, screen_height, min_px))
 
     for x, y in exist_position:
         if x in x_list:
@@ -117,6 +117,10 @@ while True:
 
     # set food position
     screen.blit(food, food_position)
+
+    # constraint snake can't crash self
+    if any(p == position_list[-1] for p in position_list[:-1]):
+        game_over()
 
     # constraint snake can't out screen
     if not (0 <= position_x < screen_width):
