@@ -26,6 +26,23 @@ background = pygame.transform.scale(pygame.image.load('resource/img/background.j
 snake_shape = pygame.transform.scale(pygame.image.load('resource/img/snake.jpg'), (min_px, min_px))
 food = pygame.transform.scale(pygame.image.load('resource/img/food.jpg'), (min_px, min_px))
 
+# font
+font = pygame.font.Font('resource/font/myfont.ttf', 80)
+death_message1 = font.render("你已经死了", True, (0, 0, 0), (255, 255, 255))
+death_message2 = font.render("点击我或者", True, (0, 0, 0), (255, 255, 255))
+death_message3 = font.render("回车键重新", True, (0, 0, 0), (255, 255, 255))
+death_message4 = font.render("　　　开始", True, (0, 0, 0), (255, 255, 255))
+
+death = False
+
+
+def show_death_message():
+    screen.blit(death_message1, (50, 100))
+    screen.blit(death_message2, (50, 180))
+    screen.blit(death_message3, (50, 260))
+    screen.blit(death_message4, (50, 340))
+    return True
+
 
 # game over
 def game_over():
@@ -70,17 +87,26 @@ while True:
         if event.type == pygame.QUIT:
             game_over()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
-                snake_direction.append('down')
-            elif event.key == pygame.K_UP and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
-                snake_direction.append('up')
-            elif event.key == pygame.K_LEFT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
-                snake_direction.append('left')
-            elif event.key == pygame.K_RIGHT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
-                snake_direction.append('right')
-            elif event.key == pygame.K_ESCAPE:
+        elif event.type == pygame.KEYDOWN:
+            if not death:
+                if event.key == pygame.K_DOWN and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
+                    snake_direction.append('down')
+                elif event.key == pygame.K_UP and (not snake_direction or snake_direction[-1] not in ['up', 'down']):
+                    snake_direction.append('up')
+                elif event.key == pygame.K_LEFT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
+                    snake_direction.append('left')
+                elif event.key == pygame.K_RIGHT and (not snake_direction or snake_direction[-1] not in ['right', 'left']):
+                    snake_direction.append('right')
+
+            if event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(QUIT, {}))
+            elif event.key == pygame.K_RETURN:
+                death = False
+                snake_length = 1
+                position_x, position_y = generate_position([(0, 0)])
+                position_list = [(position_x, position_y)]
+                food_position = generate_position(position_list)
+                snake_direction = []
 
     # control snake speed
     if current_speed < max_speed:
@@ -123,13 +149,13 @@ while True:
 
     # constraint snake can't crash self
     if any(p == position_list[-1] for p in position_list[:-1]):
-        game_over()
+        death = show_death_message()
 
     # constraint snake can't out screen
     if not (0 <= position_x < screen_width):
-        game_over()
+        death = show_death_message()
     if not (0 <= position_y < screen_height):
-        game_over()
+        death = show_death_message()
 
     # update screen
     pygame.display.update()
