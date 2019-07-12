@@ -32,15 +32,16 @@ death_message1 = font.render("你已经死了", True, (0, 0, 0), (255, 255, 255)
 death_message2 = font.render("点击我或者", True, (0, 0, 0), (255, 255, 255))
 death_message3 = font.render("回车键重新", True, (0, 0, 0), (255, 255, 255))
 death_message4 = font.render("　　　开始", True, (0, 0, 0), (255, 255, 255))
+death_message_list = [death_message1, death_message2, death_message3, death_message4]
 
 death = False
 
 
 def show_death_message():
-    screen.blit(death_message1, (50, 100))
-    screen.blit(death_message2, (50, 180))
-    screen.blit(death_message3, (50, 260))
-    screen.blit(death_message4, (50, 340))
+    death_rect = death_message1.get_rect()
+    h = death_rect.height
+    for i in range(0, len(death_message_list)):
+        screen.blit(death_message_list[i], (50, 100+h*i))
     return True
 
 
