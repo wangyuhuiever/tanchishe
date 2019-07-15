@@ -12,9 +12,9 @@ screen_height = 500
 min_px = 20
 
 # speed config
-snake_speed = 15
+snake_speed = 1
 current_speed = snake_speed
-max_speed = 20
+max_speed = 10
 
 screen = pygame.display.set_mode([screen_width, screen_height])
 pygame.display.set_caption("贪吃蛇")
@@ -90,6 +90,9 @@ food_position = generate_position(position_list)
 # default direction
 snake_direction = []
 
+# scrap position to store to before position
+scrap_position = []
+
 while True:
     # set background
     screen.blit(background, (0, 0))
@@ -155,9 +158,15 @@ while True:
         position_list.append((position_x, position_y))
 
         # if snake length more than position length, position pop index 0
-        if len(position_list) > snake_length:
-            position_list.pop(0)
+        if len(position_list) > snake_length and not death:
+            pre_pos = position_list.pop(0)
+            scrap_position.append(pre_pos)
+            if len(scrap_position) > 2:
+                scrap_position.pop(0)
 
+        # show right length when death
+        if death:
+            position_list.insert(0, scrap_position[1])
         # if eat food position list, snake length add 1, regenerate food position
         if food_position == position_list[-1]:
             snake_length += 1
