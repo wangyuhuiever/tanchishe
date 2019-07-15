@@ -49,6 +49,14 @@ def show_death_message():
     return new_rect
 
 
+def position_in_rect(position, rect):
+    x, y = position
+    rx, ry, rw, rh = rect
+    if (rx <= x <= rx + rw) and (ry <= y <= ry + rh):
+        return True
+    return False
+
+
 # game over
 def game_over():
     print('quit')
@@ -106,6 +114,15 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(QUIT, {}))
             elif event.key == pygame.K_RETURN:
+                death = False
+                death_region = Rect(0, 0, 0, 0)
+                snake_length = 1
+                position_x, position_y = generate_position([(0, 0)])
+                position_list = [(position_x, position_y)]
+                food_position = generate_position(position_list)
+                snake_direction = []
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if position_in_rect(event.pos, death_region):
                 death = False
                 death_region = Rect(0, 0, 0, 0)
                 snake_length = 1
