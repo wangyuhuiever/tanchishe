@@ -45,12 +45,12 @@ def show_death_message():
     for i in range(0, len(death_message_list)):
         screen.blit(death_message_list[i], (50, 100+h*i))
         new_h += h
-    new_rect = Rect(x, y, w, new_h)
+    new_rect = Rect(50+x, 100+y, w, new_h-h)
     return new_rect
 
 
-def position_in_rect(position, rect):
-    x, y = position
+def position_in_rect(pos, rect):
+    x, y = pos
     rx, ry, rw, rh = rect
     if (rx <= x <= rx + rw) and (ry <= y <= ry + rh):
         return True
