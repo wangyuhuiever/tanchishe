@@ -35,14 +35,18 @@ death_message4 = font.render("　　　开始", True, (0, 0, 0), (255, 255, 255)
 death_message_list = [death_message1, death_message2, death_message3, death_message4]
 
 death = False
+death_region = Rect(0, 0, 0, 0)
 
 
 def show_death_message():
     death_rect = death_message1.get_rect()
-    h = death_rect.height
+    x, y, w, h = death_rect
+    new_h = h
     for i in range(0, len(death_message_list)):
         screen.blit(death_message_list[i], (50, 100+h*i))
-    return True
+        new_h += h
+    new_rect = Rect(x, y, w, new_h)
+    return new_rect
 
 
 # game over
@@ -103,6 +107,7 @@ while True:
                 pygame.event.post(pygame.event.Event(QUIT, {}))
             elif event.key == pygame.K_RETURN:
                 death = False
+                death_region = Rect(0, 0, 0, 0)
                 snake_length = 1
                 position_x, position_y = generate_position([(0, 0)])
                 position_list = [(position_x, position_y)]
@@ -150,13 +155,16 @@ while True:
 
     # constraint snake can't crash self
     if any(p == position_list[-1] for p in position_list[:-1]):
-        death = show_death_message()
+        death_region = show_death_message()
+        death = True
 
     # constraint snake can't out screen
     if not (0 <= position_x < screen_width):
-        death = show_death_message()
+        death_region = show_death_message()
+        death = True
     if not (0 <= position_y < screen_height):
-        death = show_death_message()
+        death_region = show_death_message()
+        death = True
 
     # update screen
     pygame.display.update()
